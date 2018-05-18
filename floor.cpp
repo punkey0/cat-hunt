@@ -17,8 +17,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <thread>
-#include <chrono>
 #include <sstream>
+#include <ctime>
 
 Floor::Floor()
 {
@@ -214,7 +214,7 @@ void Floor::makeFloor()
 	right3 = pointer;
 	temp3 = pointer;
 	
-	unsigned seed = std::time(nullptr); //pulls current epoch time for seed
+	unsigned seed = (unsigned int)std::time(nullptr); //pulls current epoch time for seed
 	srand(seed); //sets seed
 	catX = (rand() % 3);  //random X/Y coordinates for cat, TV, vase, chair, and Player
 	catY = (rand() % 3);
@@ -1191,7 +1191,6 @@ void Floor::newTurn()
 	bool catCheck = false;
 	Item *temp;
 	Item *temp2;
-	Space *pointer;
 	
 	std::cout << "Which direction do you want to move?" << std::endl;
 	std::cout << "1. North" << std::endl;
@@ -1223,28 +1222,31 @@ void Floor::newTurn()
 	
 	if (direction == 1) //moving up/North
 	{
-		if (playerP->up->item->printSymbol() == 'V' || playerP->up->item->printSymbol() == 'h' || playerP->up->item->printSymbol() == '@')
-		{
-			std::cout << "You trip over the obstacle in the dark, making a huge crash!" << std::endl;
-			std::cout << "\"What on Earth is all that racket?\" your father shouts from downstairs. Busted!" << std::endl;
-			gameLose = true;
-			return;
-		}
-		else if (playerP->up->item->printSymbol() == 'c' && playerP->item->checkInv() == '.')
-		{
-			std::cout << "You try to pick up the cat, but it hisses and scraches your hands! Ouch!" << std::endl;
-			std::cout << "The cat scampers away in the dark. Better find the closet and get the cat carrier out of it first!" << std::endl;
-			return;
-		}
-		else if (playerP->up->item->printSymbol() == 'c' && playerP->item->checkInv() == 'C')
-		{
-			std::cout << "You carefully creep up on the pair of beady glowing eyes, open the cage..." << std::endl;
-			std::cout << "...and the cat just walks inside and curls up, purring. Cats, huh?" << std::endl;
-			getCat = true;
-			delete catP->item;
-			catP->item = new Item;
-			return;
-		}
+        if (playerP->up != nullptr)
+        {
+            if (playerP->up->item->printSymbol() == 'V' || playerP->up->item->printSymbol() == 'h' || playerP->up->item->printSymbol() == '@')
+            {
+                std::cout << "You trip over the obstacle in the dark, making a huge crash!" << std::endl;
+                std::cout << "\"What on Earth is all that racket?\" your father shouts from downstairs. Busted!" << std::endl;
+                gameLose = true;
+                return;
+            }
+            else if (playerP->up->item->printSymbol() == 'c' && playerP->item->checkInv() == '.')
+            {
+                std::cout << "You try to pick up the cat, but it hisses and scraches your hands! Ouch!" << std::endl;
+                std::cout << "The cat scampers away in the dark. Better find the closet and get the cat carrier out of it first!" << std::endl;
+                return;
+            }
+            else if (playerP->up != nullptr && playerP->up->item->printSymbol() == 'c' && playerP->item->checkInv() == 'C')
+            {
+                std::cout << "You carefully creep up on the pair of beady glowing eyes, open the cage..." << std::endl;
+                std::cout << "...and the cat just walks inside and curls up, purring. Cats, huh?" << std::endl;
+                getCat = true;
+                delete catP->item;
+                catP->item = new Item;
+                return;
+            }
+        }
 		else if (playerP == top0 || playerP == top1 || playerP == top2 || playerP == top3)
 		{
 			std::cout << "You bump up against the cool concrete walls of the basement - and get a little basement gunk on your hands. Gross." << std::endl;
@@ -1259,7 +1261,7 @@ void Floor::newTurn()
 		playerP->item = temp2;
 		playerP = playerP->up;
 				
-		unsigned seed = std::time(nullptr); //pulls current epoch time for seed
+		unsigned seed = (unsigned int)std::time(nullptr); //pulls current epoch time for seed
 		srand(seed); //sets seed
 		while (catCheck == false)
 		{
@@ -1461,34 +1463,37 @@ void Floor::newTurn()
 	
 	if (direction == 2)
 	{
-		if (playerP->right->item->printSymbol() == 'V' || playerP->right->item->printSymbol() == 'h' || playerP->right->item->printSymbol() == '@')
-		{
-			std::cout << "You trip over the obstacle in the dark, making a huge crash!" << std::endl;
-			std::cout << "\"What on Earth is all that racket?\" your father shouts from downstairs. Busted!" << std::endl;
-			gameLose = true;
-			return;
-		}
-		else if (playerP->right->item->printSymbol() == 'c' && playerP->item->checkInv() == '.')
-		{
-			std::cout << "You try to pick up the cat, but it hisses and scraches your hands! Ouch!" << std::endl;
-			std::cout << "Better find the closet and get the cat carrier out of it first!" << std::endl;
-		}
-		else if (playerP->right->item->printSymbol() == 'c' && playerP->item->checkInv() == 'C')
-		{
-			std::cout << "You carefully creep up on the pair of beady glowing eyes, open the cage..." << std::endl;
-			std::cout << "...and the cat just walks inside and curls up, purring. Cats, huh?" << std::endl;
-			getCat = true;
-			delete catP->item;
-			catP->item = new Item;
-			return;
-		}
-		else if (playerP->right->item->printSymbol() == 'C' && playerP->item->checkInv() == '.')
-		{
-			std::cout << "You run your hands over the sliding doors of the basement closet door, roll it open..." << std::endl;
-			std::cout << "And there's that darn cat carrier! Now you can get the little beast without getting scratched up. Maybe." << std::endl;
-			playerP->item->changeInv('C');
-			return;
-		}
+        if (playerP->right != nullptr)
+        {
+            if (playerP->right->item->printSymbol() == 'V' || playerP->right->item->printSymbol() == 'h' || playerP->right->item->printSymbol() == '@')
+            {
+                std::cout << "You trip over the obstacle in the dark, making a huge crash!" << std::endl;
+                std::cout << "\"What on Earth is all that racket?\" your father shouts from downstairs. Busted!" << std::endl;
+                gameLose = true;
+                return;
+            }
+            else if (playerP->right->item->printSymbol() == 'c' && playerP->item->checkInv() == '.')
+            {
+                std::cout << "You try to pick up the cat, but it hisses and scraches your hands! Ouch!" << std::endl;
+                std::cout << "Better find the closet and get the cat carrier out of it first!" << std::endl;
+            }
+            else if (playerP->right->item->printSymbol() == 'c' && playerP->item->checkInv() == 'C')
+            {
+                std::cout << "You carefully creep up on the pair of beady glowing eyes, open the cage..." << std::endl;
+                std::cout << "...and the cat just walks inside and curls up, purring. Cats, huh?" << std::endl;
+                getCat = true;
+                delete catP->item;
+                catP->item = new Item;
+                return;
+            }
+            else if (playerP->right->item->printSymbol() == 'C' && playerP->item->checkInv() == '.')
+            {
+                std::cout << "You run your hands over the sliding doors of the basement closet door, roll it open..." << std::endl;
+                std::cout << "And there's that darn cat carrier! Now you can get the little beast without getting scratched up. Maybe." << std::endl;
+                playerP->item->changeInv('C');
+                return;
+            }
+        }
 		else if (playerP == right0 || playerP == right1 || playerP == right2 || playerP == right3)
 		{
 			std::cout << "You bump into rack after rack of dusty old coats. Achoo!" << std::endl;
@@ -1508,7 +1513,7 @@ void Floor::newTurn()
 		
 		std::cout << "Move complete" << std::endl;
 				
-		unsigned seed = std::time(nullptr); //pulls current epoch time for seed
+		unsigned seed = (unsigned int)std::time(nullptr); //pulls current epoch time for seed
 		srand(seed); //sets seed
 		while (catCheck == false)
 		{
@@ -1710,27 +1715,30 @@ void Floor::newTurn()
 	
 	if (direction == 3)
 	{
-		if (playerP->down->item->printSymbol() == 'V' || playerP->down->item->printSymbol() == 'h' || playerP->down->item->printSymbol() == '@')
-		{
-			std::cout << "You trip over the obstacle in the dark, making a huge crash!" << std::endl;
-			std::cout << "\"What on Earth is all that racket?\" your father shouts from downstairs. Busted!" << std::endl;
-			gameLose = true;
-			return;
-		}
-		else if (playerP->down->item->printSymbol() == 'c' && playerP->item->checkInv() == '.')
-		{
-			std::cout << "You try to pick up the cat, but it hisses and scraches your hands! Ouch!" << std::endl;
-			std::cout << "Better find the closet and get the cat carrier out of it first!" << std::endl;
-		}
-		else if (playerP->down->item->printSymbol() == 'c' && playerP->item->checkInv() == 'C')
-		{
-			std::cout << "You carefully creep up on the pair of beady glowing eyes, open the cage..." << std::endl;
-			std::cout << "...and the cat just walks inside and curls up, purring. Cats, huh?" << std::endl;
-			getCat = true;
-			delete catP->item;
-			catP->item = new Item;
-			return;
-		}
+        if (playerP->down != nullptr)
+        {
+            if (playerP->down->item->printSymbol() == 'V' || playerP->down->item->printSymbol() == 'h' || playerP->down->item->printSymbol() == '@')
+            {
+                std::cout << "You trip over the obstacle in the dark, making a huge crash!" << std::endl;
+                std::cout << "\"What on Earth is all that racket?\" your father shouts from downstairs. Busted!" << std::endl;
+                gameLose = true;
+                return;
+            }
+            else if (playerP->down->item->printSymbol() == 'c' && playerP->item->checkInv() == '.')
+            {
+                std::cout << "You try to pick up the cat, but it hisses and scraches your hands! Ouch!" << std::endl;
+                std::cout << "Better find the closet and get the cat carrier out of it first!" << std::endl;
+            }
+            else if (playerP->down->item->printSymbol() == 'c' && playerP->item->checkInv() == 'C')
+            {
+                std::cout << "You carefully creep up on the pair of beady glowing eyes, open the cage..." << std::endl;
+                std::cout << "...and the cat just walks inside and curls up, purring. Cats, huh?" << std::endl;
+                getCat = true;
+                delete catP->item;
+                catP->item = new Item;
+                return;
+            }
+        }
 		else if (playerP == bottom0 || playerP == bottom1 || playerP == bottom2 || playerP == bottom3)
 		{
 			std::cout << "You bump up against the cool concrete walls of the basement - and get a little basement gunk on your hands. Gross." << std::endl;
@@ -1745,7 +1753,7 @@ void Floor::newTurn()
 		playerP->item = temp2;
 		playerP = playerP->down;	
 				
-		unsigned seed = std::time(nullptr); //pulls current epoch time for seed
+		unsigned seed = (unsigned int)std::time(nullptr); //pulls current epoch time for seed
 		srand(seed); //sets seed
 		while (catCheck == false)
 		{
@@ -1947,48 +1955,51 @@ void Floor::newTurn()
 	
 	if (direction == 4)
 	{
-		if (playerP->left->item->printSymbol() == 'V' || playerP->left->item->printSymbol() == 'h' || playerP->left->item->printSymbol() == '@')
-		{
-			std::cout << "You trip over the obstacle in the dark, making a huge crash!" << std::endl;
-			std::cout << "\"What on Earth is all that racket?\" your father shouts from downstairs. Busted!" << std::endl;
-			gameLose = true;
-			return;
-		}
-		else if (playerP->left->item->printSymbol() == 'c' && playerP->item->checkInv() == '.')
-		{
-			std::cout << "You try to pick up the cat, but it hisses and scraches your hands! Ouch!" << std::endl;
-			std::cout << "Better find the closet and get the cat carrier out of it first!" << std::endl;
-		}
-		else if (playerP->left->item->printSymbol() == 'c' && playerP->item->checkInv() == 'C')
-		{
-			std::cout << "You carefully creep up on the pair of beady glowing eyes, open the cage..." << std::endl;
-			std::cout << "...and the cat just walks inside and curls up, purring. Cats, huh?" << std::endl;
-			getCat = true;
-			delete catP->item;
-			catP->item = new Item;
-			return;
-		}
-		else if (playerP->left->item->printSymbol() == 'E' && getCat == false)
-		{
-			std::cout << "You find your way back to the steps going upstairs - but that darn cat is still in the basement." << std::endl;
-			std::cout << "Better turn around and see if you can find the darn thing before your parents wake up." << std::endl;
-		}
-		else if (playerP == left0 || playerP == left1 || playerP == left2 || playerP == left3)
-		{
-			std::cout << "You put your hand on the doorknob - but you still don't have the cat!" << std::endl;
-			std::cout << "Better turn around and find that cat!" << std::endl;
-			return;
-		}
-		else if (playerP->left->item->printSymbol() == 'E' && getCat == true)
-		{
-			std::cout << "Cat in the carrier and carrier in hand, you open the door and head up the steps." << std::endl;
-			std::cout << "You managed to get the cat before your parents woke up - good job!" << std::endl;
-			std::cout << "Setting the carrier down, you slowly open the door..." << std::endl;
-			std::cout << "...and the cat bolts out and heads right back down stairs! Oh well." << std::endl;
-			gameWin = true;
-			return;
-		}
-		
+        if (playerP->left != nullptr)
+        {
+            if (playerP->left->item->printSymbol() == 'V' || playerP->left->item->printSymbol() == 'h' || playerP->left->item->printSymbol() == '@')
+            {
+                std::cout << "You trip over the obstacle in the dark, making a huge crash!" << std::endl;
+                std::cout << "\"What on Earth is all that racket?\" your father shouts from downstairs. Busted!" << std::endl;
+                gameLose = true;
+                return;
+            }
+            else if (playerP->left != nullptr && playerP->left->item->printSymbol() == 'c' && playerP->item->checkInv() == '.')
+            {
+                std::cout << "You try to pick up the cat, but it hisses and scraches your hands! Ouch!" << std::endl;
+                std::cout << "Better find the closet and get the cat carrier out of it first!" << std::endl;
+            }
+            else if (playerP->left != nullptr && playerP->left->item->printSymbol() == 'c' && playerP->item->checkInv() == 'C')
+            {
+                std::cout << "You carefully creep up on the pair of beady glowing eyes, open the cage..." << std::endl;
+                std::cout << "...and the cat just walks inside and curls up, purring. Cats, huh?" << std::endl;
+                getCat = true;
+                delete catP->item;
+                catP->item = new Item;
+                return;
+            }
+            else if (playerP->left != nullptr && playerP->left->item->printSymbol() == 'E' && getCat == false)
+            {
+                std::cout << "You find your way back to the steps going upstairs - but that darn cat is still in the basement." << std::endl;
+                std::cout << "Better turn around and see if you can find the darn thing before your parents wake up." << std::endl;
+            }
+            else if (playerP->left->item->printSymbol() == 'E' && getCat == true)
+            {
+                std::cout << "Cat in the carrier and carrier in hand, you open the door and head up the steps." << std::endl;
+                std::cout << "You managed to get the cat before your parents woke up - good job!" << std::endl;
+                std::cout << "Setting the carrier down, you slowly open the door..." << std::endl;
+                std::cout << "...and the cat bolts out and heads right back down stairs! Oh well." << std::endl;
+                gameWin = true;
+                return;
+            }
+        }
+        else if (playerP == left0 || playerP == left1 || playerP == left2 || playerP == left3)
+        {
+            std::cout << "You put your hand on the doorknob - but you still don't have the cat!" << std::endl;
+            std::cout << "Better turn around and find that cat!" << std::endl;
+            return;
+        }
+
 		temp = playerP->item;
 		temp2 = playerP->left->item;
 		
@@ -1996,7 +2007,7 @@ void Floor::newTurn()
 		playerP->item = temp2;
 		playerP = playerP->left;	
 				
-		unsigned seed = std::time(nullptr); //pulls current epoch time for seed
+		unsigned seed = (unsigned int)std::time(nullptr); //pulls current epoch time for seed
 		srand(seed); //sets seed
 		while (catCheck == false)
 		{
@@ -2199,56 +2210,56 @@ void Floor::newTurn()
 
 void Floor::senseNear() //sense nearby objects
 {
-	if (playerP->up->item->printSymbol() == 'V') //read in a given direction and output text
-	{
-		std::cout << "The scent of decaying flowers comes from just north of you..." << std::endl;
-	}
-	else if (playerP->right->item->printSymbol() == 'V')
-	{
-		std::cout << "The scent of decaying flowers comes from just east of you..." << std::endl;
-	}
-	else if (playerP->left->item->printSymbol() == 'V')
-	{
-		std::cout << "The scent of decaying flowers comes from just west of you..." << std::endl;
-	}
-	else if (playerP->down->item->printSymbol() == 'V')
-	{
-		std::cout << "The scent of decaying flowers comes from just south of you..." << std::endl;
-	}
-	
-	if (playerP->up->item->printSymbol() == '@')
-	{
-		std::cout << "You hear the faint crackle of a old cathode tube just north of you..." << std::endl;
-	}
-	else if (playerP->right->item->printSymbol() == '@')
-	{
-		std::cout << "You hear the faint crackle of a old cathode tube just east of you..." << std::endl;
-	}
-	else if (playerP->left->item->printSymbol() == '@')
-	{
-		std::cout << "You hear the faint crackle of a old cathode tube just west of you..." << std::endl;
-	}
-	else if (playerP->down->item->printSymbol() == '@')
-	{
-		std::cout << "You hear the faint crackle of a old cathode tube just south of you..." << std::endl;
-	}
-	
-	if (playerP->up->item->printSymbol() == 'h')
-	{
-		std::cout << "Your nose fills with the dust of decaying upholstery from the north..." << std::endl;
-	}
-	else if (playerP->right->item->printSymbol() == 'h')
-	{
-		std::cout << "Your nose fills with the dust of decaying upholstery from the east..." << std::endl;
-	}
-	else if (playerP->left->item->printSymbol() == 'h')
-	{
-		std::cout << "Your nose fills with the dust of decaying upholstery from the west..." << std::endl;
-	}
-	else if (playerP->down->item->printSymbol() == 'h')
-	{
-		std::cout << "Your nose fills with the dust of decaying upholstery from the south..." << std::endl;
-	}
+    if (playerP->up != nullptr && playerP->up->item->printSymbol() == 'V') //read in a given direction and output text
+    {
+        std::cout << "The scent of decaying flowers comes from just north of you..." << std::endl;
+    }
+    else if (playerP->right != nullptr && playerP->right->item->printSymbol() == 'V')
+    {
+        std::cout << "The scent of decaying flowers comes from just east of you..." << std::endl;
+    }
+    else if (playerP->left != nullptr && playerP->left->item->printSymbol() == 'V')
+    {
+        std::cout << "The scent of decaying flowers comes from just west of you..." << std::endl;
+    }
+    else if (playerP->down != nullptr && playerP->down->item->printSymbol() == 'V')
+    {
+        std::cout << "The scent of decaying flowers comes from just south of you..." << std::endl;
+    }
+
+    if (playerP->up != nullptr && playerP->up->item->printSymbol() == '@')
+    {
+        std::cout << "You hear the faint crackle of a old cathode tube just north of you..." << std::endl;
+    }
+    else if (playerP->right != nullptr && playerP->right->item->printSymbol() == '@')
+    {
+        std::cout << "You hear the faint crackle of a old cathode tube just east of you..." << std::endl;
+    }
+    else if (playerP->left != nullptr && playerP->left->item->printSymbol() == '@')
+    {
+        std::cout << "You hear the faint crackle of a old cathode tube just west of you..." << std::endl;
+    }
+    else if (playerP->down != nullptr && playerP->down->item->printSymbol() == '@')
+    {
+        std::cout << "You hear the faint crackle of a old cathode tube just south of you..." << std::endl;
+    }
+
+    if (playerP->up != nullptr && playerP->up->item->printSymbol() == 'h')
+    {
+        std::cout << "Your nose fills with the dust of decaying upholstery from the north..." << std::endl;
+    }
+    else if (playerP->right != nullptr && playerP->right->item->printSymbol() == 'h')
+    {
+        std::cout << "Your nose fills with the dust of decaying upholstery from the east..." << std::endl;
+    }
+    else if (playerP->left != nullptr && playerP->left->item->printSymbol() == 'h')
+    {
+        std::cout << "Your nose fills with the dust of decaying upholstery from the west..." << std::endl;
+    }
+    else if (playerP->down != nullptr && playerP->down->item->printSymbol() == 'h')
+    {
+        std::cout << "Your nose fills with the dust of decaying upholstery from the south..." << std::endl;
+    }
 }
 
 bool Floor::getWin()
